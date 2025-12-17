@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Commande;
 use App\Models\Magasin;
 use App\Models\User;
 use Illuminate\Database\QueryException;
@@ -200,6 +201,35 @@ class AuthController extends Controller
                 'success' => false,
                 'message' => 'Erreur lors de la connexion du magasin'
             ],500);
+        }
+    }
+
+    public function nombre_clients(Request $request){
+        try {
+            $magasin = $request->user();
+
+            if (!$magasin) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Magasin non authentifié'
+                ], 401);
+            }
+
+            $nombreClients = Commande::where('magasin_id', $magasin->id)
+                ->distinct('client_id')
+                ->count('client_id');
+
+            return response()->json([
+                'success' => true,
+                'data' => $nombreClients,
+                'message' => 'Nombre de clients récupéré avec succès',
+            ], 200);
+
+        } catch (QueryException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors du chargement des statistiques'
+            ], 500);
         }
     }
 }

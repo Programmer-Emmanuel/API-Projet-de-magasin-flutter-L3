@@ -30,6 +30,8 @@ Route::middleware('auth:sanctum')->group(function(){
 
     Route::post('/changer/livree/{id}', [CommandeController::class, 'changer_statut_livree']);
     Route::post('/changer/annulee/{id}', [CommandeController::class, 'changer_statut_annulee']);
+
+    Route::get('/nombre/client', [AuthController::class, 'nombre_clients']);
 });
 
 Route::get('/produits', [ProduitController::class, 'produits']);
